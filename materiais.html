@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marcel Esquadrias — Materiais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="materiais.css" />
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo-container">
+      <div class="logo-box-branco">
+        <img src="logo.png" alt="Marcel Esquadrias" class="sidebar-logo-img" />
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="nav-link" onclick="telaEmDesenvolvimento(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Clientes
+      </a>
+      <a href="#" class="nav-link" onclick="telaEmDesenvolvimento(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        Fornecedores
+      </a>
+      <a href="#" class="nav-link" onclick="telaEmDesenvolvimento(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Orçamentos
+      </a>
+      <a href="#" class="nav-link" onclick="telaEmDesenvolvimento(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke-linecap="round"/></svg>
+        Pedidos
+      </a>
+      <a href="#" class="nav-link" onclick="telaEmDesenvolvimento(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg>
+        Produtos
+      </a>
+      <a href="materiais.html" class="nav-link ativo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Materiais
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="fazerLogout()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <div class="pagina">
+    <div id="avisoDesenvolvimento" style="display:none; background-color:#fef3c7; border:1px solid #f59e0b; color:#b45309; padding:12px; border-radius:6px; margin-bottom:10px; font-weight:500;"></div>
+
+    <div class="topo-pagina">
+      <div class="topo-info">
+        <div class="topo-icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div>
+          <h1 class="topo-titulo">Materiais</h1>
+          <p class="topo-sub">Controle de estoque de materiais</p>
+        </div>
+      </div>
+      <div class="topo-acoes">
+        <button class="btn-relatorio" onclick="alert('Funcionalidade de relatório em desenvolvimento.')">
+          Gerar Relatório
+        </button>
+        <button class="btn-novo" onclick="abrirModal()">
+          + Novo Material
+        </button>
+      </div>
+    </div>
+
+    <div class="area-tabela">
+      <div class="filtros-area">
+        <div class="busca-wrap">
+          <input type="text" id="campoBusca" class="campo-busca" placeholder="Buscar por nome ou código..." oninput="filtrar()" />
+        </div>
+
+        <div class="filtro-categorias">
+          <button class="filtro-btn ativo" onclick="filtrarCategoria('todos', this)">Todos</button>
+          <button class="filtro-btn" onclick="filtrarCategoria('Perfis', this)">Perfis</button>
+          <button class="filtro-btn" onclick="filtrarCategoria('Vidros', this)">Vidros</button>
+          <button class="filtro-btn" onclick="filtrarCategoria('Ferragens', this)">Ferragens</button>
+          <button class="filtro-btn" onclick="filtrarCategoria('Acessórios', this)">Acessórios</button>
+        </div>
+      </div>
+
+      <table class="tabela" id="tabela">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome do Material</th>
+            <th>Categoria</th>
+            <th>Unidade</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+
+      <div id="msgVazia" class="msg-vazia" style="display:none;">
+        <p>Nenhum material encontrado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="fecharTodosModais()"></div>
+
+  <div id="modalVer" class="modal">
+    <div class="modal-header">
+      <div>
+        <h3>Detalhes do Material</h3>
+        <p class="modal-sub">Informações completas do material</p>
+      </div>
+      <button class="modal-x" onclick="fecharModalVer()">✕</button>
+    </div>
+
+    <div class="modal-corpo grid-ver">
+      <div class="bloco-ver linha-dupla-ver">
+        <div>
+          <span class="label-ver">Código</span>
+          <strong id="verCodigo" class="val-ver">MAT001</strong>
+        </div>
+        <div>
+          <span class="label-ver">Categoria</span>
+          <span id="verCategoria" class="badge-ver">Perfis</span>
+        </div>
+      </div>
+
+      <div class="bloco-ver">
+        <span class="label-ver">Nome do Material</span>
+        <p id="verNome" class="val-ver" style="font-weight: 600;"></p>
+      </div>
+
+      <div class="bloco-ver linha-dupla-ver">
+        <div>
+          <span class="label-ver">Unidade</span>
+          <strong id="verUnidade" class="val-ver">UN</strong>
+        </div>
+        <div>
+          <span class="label-ver">Preço Unitário</span>
+          <strong id="verPreco" class="val-ver text-verde">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="bloco-ver borda-verde">
+        <span class="label-ver text-verde" style="font-weight: 600; font-size: 14px; margin-bottom: 10px; display: block;">Controle de Estoque</span>
+        <div class="linha-dupla-ver">
+          <div>
+            <span class="label-ver">Estoque Atual</span>
+            <strong id="verEstoque" class="val-ver text-destaque">0 UN</strong>
+          </div>
+          <div>
+            <span class="label-ver">Estoque Mínimo</span>
+            <strong id="verEstoqueMin" class="val-ver text-destaque">0 UN</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloco-ver linha-dupla-ver" style="align-items: center;">
+        <span class="label-ver" style="font-weight: 500; font-size: 13px;">Valor Total em Estoque</span>
+        <strong id="verTotalEstoque" class="val-ver text-verde" style="font-size: 18px;">R$ 0,00</strong>
+      </div>
+
+      <div class="bloco-ver borda-azul">
+        <span class="label-ver text-azul" style="font-weight: 600; font-size: 14px; margin-bottom: 10px; display: block;">Informações de Compra</span>
+        <div style="margin-bottom: 10px;">
+          <span class="label-ver">Fornecedor</span>
+          <p id="verFornecedor" class="val-ver" style="font-size: 13.5px;">—</p>
+        </div>
+        <div class="linha-dupla-ver">
+          <div>
+            <span class="label-ver">Última Cotação</span>
+            <strong id="verCotacao" class="val-ver" style="font-size: 13.5px;">R$ 0,00</strong>
+          </div>
+          <div>
+            <span class="label-ver">Data da Cotação</span>
+            <strong id="verDataCotacao" class="val-ver" style="font-size: 13.5px;">—</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-rodape">
+      <button class="btn-cancelar" onclick="fecharModalVer()">Fechar</button>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitulo">Novo Material</h3>
+        <p id="modalSub" class="modal-sub">Cadastre um novo material no estoque</p>
+      </div>
+      <button class="modal-x" onclick="fecharModal()">✕</button>
+    </div>
+
+    <div class="modal-corpo">
+      <div class="campo-grupo">
+        <label>Código</label>
+        <input type="text" id="inputCodigo" class="campo-input cinza" readonly />
+      </div>
+
+      <div class="campo-grupo">
+        <label>Nome do Material <span class="req">*</span></label>
+        <input type="text" id="inputNome" class="campo-input" placeholder="Perfil de Alumínio" />
+        <span class="erro" id="erroNome"></span>
+      </div>
+
+      <div class="linha-dupla">
+        <div class="campo-grupo">
+          <label>Categoria <span class="req">*</span></label>
+          <select id="inputCategoria" class="campo-input">
+            <option value="">Selecione</option>
+            <option value="Perfis">Perfis</option>
+            <option value="Vidros">Vidros</option>
+            <option value="Ferragens">Ferragens</option>
+            <option value="Acessórios">Acessórios</option>
+            <option value="Outros">Outros</option>
+          </select>
+          <span class="erro" id="erroCategoria"></span>
+        </div>
+        <div class="campo-grupo">
+          <label>Unidade <span class="req">*</span></label>
+          <select id="inputUnidade" class="campo-input">
+            <option value="">Selecione</option>
+            <option value="Metro (M)">Metro (M)</option>
+            <option value="UN">Unidade (UN)</option>
+            <option value="M²">Metro quadrado (M²)</option>
+            <option value="KG">Quilograma (KG)</option>
+          </select>
+          <span class="erro" id="erroUnidade"></span>
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <label>Preço (R$) <span class="req">*</span></label>
+        <input type="number" id="inputPreco" class="campo-input" placeholder="0,00" step="0.01" />
+        <span class="erro" id="erroPreco"></span>
+      </div>
+
+      <div class="linha-dupla">
+        <div class="campo-grupo">
+          <label>Estoque Atual <span class="req">*</span></label>
+          <input type="number" id="inputEstoque" class="campo-input" placeholder="0" />
+          <span class="erro" id="erroEstoque"></span>
+        </div>
+        <div class="campo-grupo">
+          <label>Estoque Mínimo</label>
+          <input type="number" id="inputEstoqueMin" class="campo-input" placeholder="0" />
+        </div>
+      </div>
+
+      <div class="separador" style="display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: #6b7280; margin-top: 4px;">
+        Informações de Compra
+      </div>
+
+      <div class="campo-grupo">
+        <label>Fornecedor</label>
+        <select id="inputFornecedor" class="campo-input">
+          <option value="">Selecione um fornecedor</option>
+          <option value="Fornecedor A">Fornecedor A</option>
+          <option value="Fornecedor B">Fornecedor B</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+
+      <div class="linha-dupla">
+        <div class="campo-grupo">
+          <label>Última Cotação (R$)</label>
+          <input type="number" id="inputCotacao" class="campo-input" placeholder="0,00" step="0.01" />
+        </div>
+        <div class="campo-grupo">
+          <label>Data da Cotação</label>
+          <input type="date" id="inputDataCotacao" class="campo-input" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-rodape">
+      <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-salvar" onclick="salvarMaterial()">Salvar Material</button>
+    </div>
+  </div>
+
+  <div id="overlayDel" class="overlay" onclick="fecharModalDel()"></div>
+
+  <div id="modalDel" class="modal modal-del">
+    <div class="modal-header">
+      <h3>Excluir Material</h3>
+      <button class="modal-x" onclick="fecharModalDel()">✕</button>
+    </div>
+    <div class="modal-corpo">
+      <p>Tem certeza que deseja excluir <strong id="nomeExcluir"></strong>?</p>
+    </div>
+    <div class="modal-rodape">
+      <button class="btn-cancelar" onclick="fecharModalDel()">Cancelar</button>
+      <button class="btn-excluir" onclick="confirmarExclusao()">Excluir</button>
+    </div>
+  </div>
+
+<script src="materiais.js"></script>
+</body>
+</html>
