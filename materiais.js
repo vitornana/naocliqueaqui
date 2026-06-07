@@ -366,15 +366,23 @@ function abrirEdicao(id) {
   document.getElementById("inputCodigo").value = gerarCodigo(
     mat.codigoSequencial,
   );
+
+  // Para campos de texto, o || "" funciona perfeitamente
   document.getElementById("inputNome").value = mat.nome || "";
   document.getElementById("inputCategoria").value = mat.categoria || "";
   document.getElementById("inputUnidade").value = mat.unidade || "";
-  document.getElementById("inputPreco").value = mat.preco || "";
-  document.getElementById("inputEstoque").value = mat.estoque || "";
-  document.getElementById("inputEstoqueMin").value = mat.estoqueMin || "";
   document.getElementById("inputFornecedor").value = mat.fornecedor || "";
-  document.getElementById("inputCotacao").value = mat.cotacao || "";
   document.getElementById("inputDataCotacao").value = mat.dataCotacao || "";
+
+  // Para campos numéricos, usamos a verificação !== undefined para o 0 não sumir
+  document.getElementById("inputPreco").value =
+    mat.preco !== undefined ? mat.preco : "";
+  document.getElementById("inputEstoque").value =
+    mat.estoque !== undefined ? mat.estoque : "";
+  document.getElementById("inputEstoqueMin").value =
+    mat.estoqueMin !== undefined ? mat.estoqueMin : "";
+  document.getElementById("inputCotacao").value =
+    mat.cotacao !== undefined ? mat.cotacao : "";
 
   limparErros();
 
@@ -447,7 +455,14 @@ function salvarMaterial() {
   const categoria = document.getElementById("inputCategoria").value;
   const unidade = document.getElementById("inputUnidade").value;
   const preco = document.getElementById("inputPreco").value;
-  const estoque = document.getElementById("inputEstoque").value;
+
+  // 1. Mudamos para 'let' para poder forçar o zero caso o usuário não digite nada
+  let estoque = document.getElementById("inputEstoque").value;
+
+  // 2. Se estiver em branco, assume o zero automaticamente
+  if (estoque === "") {
+    estoque = "0";
+  }
 
   let ok = true;
 
@@ -466,17 +481,16 @@ function salvarMaterial() {
     ok = false;
   }
 
-  // Converte explicitamente o texto do input para número decimal
   const precoNum = parseFloat(preco);
   if (preco === "" || isNaN(precoNum) || precoNum < 0) {
     mostrarErro("erroPreco", "O preço não pode ser negativo.");
     ok = false;
   }
 
-  // Faz a mesma conversão para o estoque. Agora o 0 passará sem problemas.
+  // 3. Validação do estoque sem o bloqueio de "vazio", pois já forçamos o "0"
   const estoqueNum = parseFloat(estoque);
-  if (estoque === "" || isNaN(estoqueNum) || estoqueNum < 0) {
-    mostrarErro("erroEstoque", "O estoque deve ser 0 ou maior.");
+  if (isNaN(estoqueNum) || estoqueNum < 0) {
+    mostrarErro("erroEstoque", "O estoque não pode ser negativo.");
     ok = false;
   }
 
@@ -486,8 +500,8 @@ function salvarMaterial() {
     nome: nome,
     categoria: categoria,
     unidade: unidade,
-    preco: parseFloat(preco),
-    estoque: parseFloat(estoque),
+    preco: precoNum, // 4. Usando a variável já convertida
+    estoque: estoqueNum, // 4. Usando a variável já convertida
     estoqueMin:
       parseFloat(document.getElementById("inputEstoqueMin").value) || 0,
     fornecedor: document.getElementById("inputFornecedor").value,
@@ -500,7 +514,6 @@ function salvarMaterial() {
       parseInt(document.getElementById("inputCodigo").dataset.seq) || 1;
   }
 
-  // Botão visual de carregando (opcional, mas fica legal)
   const btnSalvar = document.querySelector(".btn-salvar");
   btnSalvar.textContent = "Salvando...";
 
