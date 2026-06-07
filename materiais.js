@@ -1,4 +1,4 @@
-// materiais.js — CRUD de materiais com IndexedDB e Visualização Estática
+// lógica da tela de materiais — itens 7 e 8
 
 var db = null;
 var modoEdicao = false;
@@ -7,7 +7,7 @@ var idExcluindo = null;
 var categoriaAtiva = 'todos';
 var todosOsMateriais = [];
 
-// ---- BANCO DE DADOS LOCAL ----
+// criação banco de dados local IndexedDB (item 8) 
 function iniciarBanco() {
   var req = indexedDB.open('MarcelDB', 1);
 
@@ -45,7 +45,7 @@ function carregarMateriais() {
   };
 }
 
-// ---- RENDERIZAR TABELA DINÂMICA ----
+// começar a criar a tabela dinâmica
 function gerarCodigo(id) {
   return 'MAT' + String(id).padStart(3, '0');
 }
@@ -106,7 +106,7 @@ function renderizar(lista) {
   }
 }
 
-// ---- POP-UP EXCLUSIVO DE VISUALIZAÇÃO (FIGMA) ----
+// pop-up de uso exclusivo de visualização o qual veio do protótipo vindo do figma apresentado no trabalho de ES2 
 function verMaterial(id) {
   var mat = null;
   for (var i = 0; i < todosOsMateriais.length; i++) {
@@ -117,7 +117,7 @@ function verMaterial(id) {
   }
   if (!mat) return;
 
-  // Texto estático sem inputs editáveis
+
   document.getElementById('verCodigo').textContent = gerarCodigo(mat.id);
   document.getElementById('verCategoria').textContent = mat.categoria || 'Outros';
   document.getElementById('verNome').textContent = mat.nome || '—';
@@ -132,7 +132,7 @@ function verMaterial(id) {
   document.getElementById('verEstoque').textContent = estoqueNum + ' ' + (mat.unidade || 'UN');
   document.getElementById('verEstoqueMin').textContent = estoqueMinNum + ' ' + (mat.unidade || 'UN');
   
-  // Cálculo automatizado de estoque multiplicando preço por quantidade
+  // valor total pra mostrar no modal
   var valorTotalEstoque = precoNum * estoqueNum;
   document.getElementById('verTotalEstoque').textContent = 'R$ ' + valorTotalEstoque.toFixed(2).replace('.', ',');
 
@@ -155,7 +155,7 @@ function fecharModalVer() {
   document.getElementById('modalVer').classList.remove('show');
 }
 
-// ---- FILTROS ----
+//  função parar filtrar a busca 
 function filtrar() {
   var texto = document.getElementById('campoBusca').value.toLowerCase().trim();
   var lista = todosOsMateriais;
@@ -184,7 +184,7 @@ function filtrarCategoria(cat, botao) {
   filtrar();
 }
 
-// ---- MODAL CADASTRO / EDIÇÃO ----
+// modal para cadastro e edição
 function abrirModal() {
   modoEdicao = false;
   idEditando = null;
@@ -242,41 +242,40 @@ function fecharTodosModais() {
   fecharModal();
   fecharModalVer();
 }
-
-// ---- SALVAR REGISTRO ----
+// salvar registro
 function salvarMaterial() {
   limparErros();
 
-  var nome = document.getElementById('inputNome').value.trim();
-  var categoria = document.getElementById('inputCategoria').value;
-  var unidade = document.getElementById('inputUnidade').value;
-  var preco = document.getElementById('inputPreco').value;
-  var estoque = document.getElementById('inputEstoque').value;
+  const nome = document.getElementById('inputNome').value.trim();
+  const categoria = document.getElementById('inputCategoria').value;
+  const unidade = document.getElementById('inputUnidade').value;
+  const preco = document.getElementById('inputPreco').value;
+  const estoque = document.getElementById('inputEstoque').value;
 
-  var ok = true;
+  let ok = true;
 
   if (nome === '') { mostrarErro('erroNome', 'Informe o nome.'); ok = false; }
   if (categoria === '') { mostrarErro('erroCategoria', 'Selecione a categoria.'); ok = false; }
   if (unidade === '') { mostrarErro('erroUnidade', 'Selecione a unidade.'); ok = false; }
   if (preco === '' || isNaN(preco) || parseFloat(preco) < 0) { mostrarErro('erroPreco', 'Preço inválido.'); ok = false; }
-  if (estoque === '' || isNaN(estoque) || parseInt(estoque) < 0) { mostrarErro('erroEstoque', 'Estoque inválido.'); ok = false; }
+  if (estoque === '' || isNaN(estoque) || parseFloat(estoque) < 0) { mostrarErro('erroEstoque', 'Estoque inválido.'); ok = false; }
 
   if (!ok) return;
 
-  var material = {
+  const material = {
     nome:        nome,
     categoria:   categoria,
     unidade:     unidade,
     preco:       parseFloat(preco),
-    estoque:     parseInt(estoque),
-    estoqueMin:  parseInt(document.getElementById('inputEstoqueMin').value) || 0,
+    estoque:     parseFloat(estoque),
+    estoqueMin:  parseFloat(document.getElementById('inputEstoqueMin').value) || 0,
     fornecedor:  document.getElementById('inputFornecedor').value,
     cotacao:     parseFloat(document.getElementById('inputCotacao').value) || 0,
     dataCotacao: document.getElementById('inputDataCotacao').value
   };
 
-  var tx = db.transaction('materiais', 'readwrite');
-  var store = tx.objectStore('materiais');
+  const tx = db.transaction('materiais', 'readwrite');
+  const store = tx.objectStore('materiais');
 
   if (modoEdicao && idEditando !== null) {
     material.id = idEditando;
@@ -292,7 +291,7 @@ function salvarMaterial() {
   }
 }
 
-// ---- EXCLUIR REGISTRO ----
+// excluir registro
 function abrirExcluir(id, nome) {
   idExcluindo = id;
   document.getElementById('nomeExcluir').textContent = nome;
@@ -317,7 +316,7 @@ function confirmarExclusao() {
   };
 }
 
-// ---- FUNÇÕES AUXILIARES DE LIMPEZA ----
+// funções para limpar os valores digitados
 function limparForm() {
   document.getElementById('inputNome').value = '';
   document.getElementById('inputCategoria').value = '';
@@ -347,3 +346,18 @@ function mostrarErro(id, msg) {
 window.onload = function() {
   iniciarBanco();
 };
+
+function telaEmDesenvolvimento(event) {
+  event.preventDefault();
+  const container = document.getElementById('avisoDesenvolvimento');
+  container.textContent = "Em breve, tela em desenvolvimento";
+  container.style.display = "block";
+  setTimeout(function() { container.style.display = "none"; }, 4000);
+}
+
+function fazerLogout() {
+  if (confirm('Deseja realmente sair do sistema?')) {
+    window.location.href = 'login.html';
+  }
+}
+;
