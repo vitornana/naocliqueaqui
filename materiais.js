@@ -1,11 +1,3 @@
-// lógica da tela de materiais — itens 7 e 8
-let db = null;
-let modoEdicao = false;
-let idEditando = null;
-let idExcluindo = null;
-let categoriaAtiva = "todos";
-let todosOsMateriais = [];
-
 // criação banco de dados local IndexedDB (item 8)
 /*function iniciarBanco() {
   const req = indexedDB.open('MarcelDB', 1);
@@ -32,12 +24,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Variáveis globais (mantivemos as suas)
+// lógica da tela de materiais — itens 7 e 8
 let modoEdicao = false;
 let idEditando = null;
 let idExcluindo = null;
 let categoriaAtiva = "todos";
 let todosOsMateriais = [];
+
+/*
 
 req.onsuccess = function (e) {
   db = e.target.result;
@@ -49,7 +43,9 @@ req.onerror = function (e) {
   alert("Não foi possível abrir o banco de dados local.");
 };
 
-/*function carregarMateriais() {
+
+
+function carregarMateriais() {
   const tx = db.transaction('materiais', 'readonly');
   const store = tx.objectStore('materiais');
   const req = store.getAll();
@@ -103,7 +99,7 @@ function badgeCategoria(cat) {
   const cls = classes[cat] || "outros";
   return '<span class="badge ' + cls + '">' + cat + "</span>";
 }
-
+/*
 function renderizar(lista) {
   const tbody = document.getElementById("tbody");
   const msgVazia = document.getElementById("msgVazia");
@@ -173,6 +169,62 @@ function renderizar(lista) {
       "</button>" +
       "</div>" +
       "</td>";
+
+    tbody.appendChild(tr);
+  }
+}
+*/
+
+function renderizar(lista) {
+  const tbody = document.getElementById("tbody");
+  const msgVazia = document.getElementById("msgVazia");
+  tbody.innerHTML = "";
+
+  if (!lista || lista.length === 0) {
+    msgVazia.style.display = "flex";
+    return;
+  }
+
+  msgVazia.style.display = "none";
+
+  for (let i = 0; i < lista.length; i++) {
+    const m = lista[i];
+    const preco =
+      "R$ " +
+      parseFloat(m.preco || 0)
+        .toFixed(2)
+        .replace(".", ",");
+    const estoque = parseFloat(m.estoque || 0);
+    const estoqueMin = parseFloat(m.estoqueMin || 0);
+    const classeEstoque =
+      estoque > 0 && estoque > estoqueMin
+        ? "estoque-val"
+        : "estoque-val estoque-baixo";
+
+    const tr = document.createElement("tr");
+
+    // O uso da crase (`) permite injetar as variáveis diretamente com ${} e evita erros de aspas
+    tr.innerHTML = `
+      <td><span class="badge-un" style="font-weight:600;">${gerarCodigo(m.id)}</span></td>
+      <td>${m.nome}</td>
+      <td>${badgeCategoria(m.categoria)}</td>
+      <td><span class="badge-un">${m.unidade}</span></td>
+      <td>${preco}</td>
+      <td><span class="${classeEstoque}">${estoque}</span></td>
+      <td>
+        <div class="acoes-td">
+          <button class="btn-ver" title="Visualizar" onclick="verMaterial('${m.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="btn-ed" title="Editar" onclick="abrirEdicao('${m.id}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn-del" title="Excluir" onclick="abrirExcluir('${m.id}', '${m.nome.replace(/'/g, "\\'")}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+      </td>
+    `;
 
     tbody.appendChild(tr);
   }

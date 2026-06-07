@@ -1,32 +1,45 @@
-// Para um código mais organizado e limpo fizemos um arquivo separado do index.html para separar o js mesmo com o tamanho reduzido
+// Configurando BD na nuvem para o Dashboard
+const firebaseConfig = {
+  apiKey: "AIzaSyAHSZPE64HX0eLrx3sxwVa4L3W-TVYsqSI",
+  authDomain: "marcel-esquadrias.firebaseapp.com",
+  projectId: "marcel-esquadrias",
+  storageBucket: "marcel-esquadrias.firebasestorage.app",
+  messagingSenderId: "756168483393",
+  appId: "1:756168483393:web:13d626b2a15adb043f1cc0",
+};
+
+// Inicializa o Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 function telaEmDesenvolvimento(event) {
   event.preventDefault();
-  const container = document.getElementById('avisoDesenvolvimento');
+  const container = document.getElementById("avisoDesenvolvimento");
   container.textContent = "Em breve, tela em desenvolvimento";
   container.style.display = "block";
-  setTimeout(function() { container.style.display = "none"; }, 4000);
+  setTimeout(function () {
+    container.style.display = "none";
+  }, 4000);
 }
 
 function carregarTotalMateriais() {
-  const req = indexedDB.open('MarcelDB', 1);
-  req.onsuccess = function(e) {
-    const db = e.target.result;
-    if (db.objectStoreNames.contains('materiais')) {
-      const tx = db.transaction('materiais', 'readonly');
-      const store = tx.objectStore('materiais');
-      const countReq = store.count();
-      countReq.onsuccess = function() {
-        document.getElementById('totalMateriais').textContent = countReq.result;
-      };
-    }
-  };
+  // Busca a coleção no Firebase e conta o tamanho do "snapshot" (quantidade de registros)
+  db.collection("materiais")
+    .get()
+    .then((querySnapshot) => {
+      document.getElementById("totalMateriais").textContent =
+        querySnapshot.size;
+    })
+    .catch((error) => {
+      console.error("Erro ao carregar total:", error);
+      document.getElementById("totalMateriais").textContent = "0";
+    });
 }
 
 carregarTotalMateriais();
 
 function fazerLogout() {
-  if (confirm('Deseja realmente sair do sistema?')) {
-    window.location.href = 'login.html';
+  if (confirm("Deseja realmente sair do sistema?")) {
+    window.location.href = "login.html";
   }
 }
