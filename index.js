@@ -1,3 +1,8 @@
+// Verifica se o usuário está autenticado na sessão. Se não estiver, expulsa para o login.
+if (sessionStorage.getItem("autenticado") !== "sim") {
+  window.location.href = "login.html";
+}
+
 // Configurando BD na nuvem para o Dashboard
 const firebaseConfig = {
   apiKey: "AIzaSyAHSZPE64HX0eLrx3sxwVa4L3W-TVYsqSI",
@@ -40,6 +45,8 @@ carregarTotalMateriais();
 
 function fazerLogout() {
   if (confirm("Deseja realmente sair do sistema?")) {
+    // Apaga a chave de acesso da memória
+    sessionStorage.removeItem("autenticado");
     window.location.href = "login.html";
   }
 }

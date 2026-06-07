@@ -1,3 +1,8 @@
+// Verifica se o usuário está autenticado na sessão. Se não estiver, expulsa para o login.
+if (sessionStorage.getItem("autenticado") !== "sim") {
+  window.location.href = "login.html";
+}
+
 // criação banco de dados local IndexedDB (item 8)
 /*function iniciarBanco() {
   const req = indexedDB.open('MarcelDB', 1);
@@ -628,6 +633,8 @@ function telaEmDesenvolvimento(event) {
 
 function fazerLogout() {
   if (confirm("Deseja realmente sair do sistema?")) {
+    // Apaga a chave de acesso da memória
+    sessionStorage.removeItem("autenticado");
     window.location.href = "login.html";
   }
 }
