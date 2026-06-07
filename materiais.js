@@ -1,20 +1,19 @@
 // lógica da tela de materiais — itens 7 e 8
-
-var db = null;
-var modoEdicao = false;
-var idEditando = null;
-var idExcluindo = null;
-var categoriaAtiva = 'todos';
-var todosOsMateriais = [];
+let db = null;
+let modoEdicao = false;
+let idEditando = null;
+let idExcluindo = null;
+let categoriaAtiva = 'todos';
+let todosOsMateriais = [];
 
 // criação banco de dados local IndexedDB (item 8) 
 function iniciarBanco() {
-  var req = indexedDB.open('MarcelDB', 1);
+  const req = indexedDB.open('MarcelDB', 1);
 
   req.onupgradeneeded = function(e) {
-    var banco = e.target.result;
+    const banco = e.target.result;
     if (!banco.objectStoreNames.contains('materiais')) {
-      var store = banco.createObjectStore('materiais', { keyPath: 'id', autoIncrement: true });
+      const store = banco.createObjectStore('materiais', { keyPath: 'id', autoIncrement: true });
       store.createIndex('nome', 'nome', { unique: false });
     }
   };
@@ -31,9 +30,9 @@ function iniciarBanco() {
 }
 
 function carregarMateriais() {
-  var tx = db.transaction('materiais', 'readonly');
-  var store = tx.objectStore('materiais');
-  var req = store.getAll();
+  const tx = db.transaction('materiais', 'readonly');
+  const store = tx.objectStore('materiais');
+  const req = store.getAll();
 
   req.onsuccess = function() {
     todosOsMateriais = req.result || [];
@@ -51,19 +50,19 @@ function gerarCodigo(id) {
 }
 
 function badgeCategoria(cat) {
-  var classes = {
+  const classes = {
     'Perfis':     'perfis',
     'Vidros':     'vidros',
     'Ferragens':  'ferragens',
     'Acessórios': 'acessorios'
   };
-  var cls = classes[cat] || 'outros';
+  const cls = classes[cat] || 'outros';
   return '<span class="badge ' + cls + '">' + cat + '</span>';
 }
 
 function renderizar(lista) {
-  var tbody = document.getElementById('tbody');
-  var msgVazia = document.getElementById('msgVazia');
+  const tbody = document.getElementById('tbody');
+  const msgVazia = document.getElementById('msgVazia');
   tbody.innerHTML = '';
 
   if (!lista || lista.length === 0) {
@@ -73,14 +72,14 @@ function renderizar(lista) {
 
   msgVazia.style.display = 'none';
 
-  for (var i = 0; i < lista.length; i++) {
-    var m = lista[i];
-    var preco = 'R$ ' + parseFloat(m.preco || 0).toFixed(2).replace('.', ',');
-    var estoque = parseFloat(m.estoque || 0);
-    var estoqueMin = parseFloat(m.estoqueMin || 0);
-    var classeEstoque = (estoque > 0 && estoque > estoqueMin) ? 'estoque-val' : 'estoque-val estoque-baixo';
+  for (let i = 0; i < lista.length; i++) {
+    const m = lista[i];
+    const preco = 'R$ ' + parseFloat(m.preco || 0).toFixed(2).replace('.', ',');
+    const estoque = parseFloat(m.estoque || 0);
+    const estoqueMin = parseFloat(m.estoqueMin || 0);
+    const classeEstoque = (estoque > 0 && estoque > estoqueMin) ? 'estoque-val' : 'estoque-val estoque-baixo';
 
-    var tr = document.createElement('tr');
+    const tr = document.createElement('tr');
     tr.innerHTML =
       '<td><span class="badge-un" style="font-weight:600;">' + gerarCodigo(m.id) + '</span></td>' +
       '<td>' + m.nome + '</td>' +
@@ -108,8 +107,8 @@ function renderizar(lista) {
 
 // pop-up de uso exclusivo de visualização o qual veio do protótipo vindo do figma apresentado no trabalho de ES2 
 function verMaterial(id) {
-  var mat = null;
-  for (var i = 0; i < todosOsMateriais.length; i++) {
+  let mat = null;
+  for (let i = 0; i < todosOsMateriais.length; i++) {
     if (todosOsMateriais[i].id === id) { 
       mat = todosOsMateriais[i]; 
       break; 
@@ -123,24 +122,24 @@ function verMaterial(id) {
   document.getElementById('verNome').textContent = mat.nome || '—';
   document.getElementById('verUnidade').textContent = mat.unidade || 'UN';
   
-  var precoNum = parseFloat(mat.preco || 0);
-  var estoqueNum = parseFloat(mat.estoque || 0);
-  var estoqueMinNum = parseFloat(mat.estoqueMin || 0);
-  var cotacaoNum = parseFloat(mat.cotacao || 0);
+  const precoNum = parseFloat(mat.preco || 0);
+  const estoqueNum = parseFloat(mat.estoque || 0);
+  const estoqueMinNum = parseFloat(mat.estoqueMin || 0);
+  const cotacaoNum = parseFloat(mat.cotacao || 0);
 
   document.getElementById('verPreco').textContent = 'R$ ' + precoNum.toFixed(2).replace('.', ',');
   document.getElementById('verEstoque').textContent = estoqueNum + ' ' + (mat.unidade || 'UN');
   document.getElementById('verEstoqueMin').textContent = estoqueMinNum + ' ' + (mat.unidade || 'UN');
   
   // valor total pra mostrar no modal
-  var valorTotalEstoque = precoNum * estoqueNum;
+  const valorTotalEstoque = precoNum * estoqueNum;
   document.getElementById('verTotalEstoque').textContent = 'R$ ' + valorTotalEstoque.toFixed(2).replace('.', ',');
 
   document.getElementById('verFornecedor').textContent = mat.fornecedor || 'Não Informado';
   document.getElementById('verCotacao').textContent = 'R$ ' + cotacaoNum.toFixed(2).replace('.', ',');
   
   if (mat.dataCotacao) {
-    var dataFormatada = mat.dataCotacao.split('-').reverse().join('/');
+    const dataFormatada = mat.dataCotacao.split('-').reverse().join('/');
     document.getElementById('verDataCotacao').textContent = dataFormatada;
   } else {
     document.getElementById('verDataCotacao').textContent = '—';
@@ -157,8 +156,8 @@ function fecharModalVer() {
 
 //  função parar filtrar a busca 
 function filtrar() {
-  var texto = document.getElementById('campoBusca').value.toLowerCase().trim();
-  var lista = todosOsMateriais;
+  const texto = document.getElementById('campoBusca').value.toLowerCase().trim();
+  let lista = todosOsMateriais;
 
   if (categoriaAtiva !== 'todos') {
     lista = lista.filter(function(m) { return m.categoria === categoriaAtiva; });
@@ -166,7 +165,7 @@ function filtrar() {
 
   if (texto !== '') {
     lista = lista.filter(function(m) {
-      var cod = gerarCodigo(m.id).toLowerCase();
+      const cod = gerarCodigo(m.id).toLowerCase();
       return m.nome.toLowerCase().indexOf(texto) !== -1 || cod.indexOf(texto) !== -1;
     });
   }
@@ -176,8 +175,8 @@ function filtrar() {
 
 function filtrarCategoria(cat, botao) {
   categoriaAtiva = cat;
-  var botoes = document.querySelectorAll('.filtro-btn');
-  for (var i = 0; i < botoes.length; i++) {
+  const botoes = document.querySelectorAll('.filtro-btn');
+  for (let i = 0; i < botoes.length; i++) {
     botoes[i].classList.remove('ativo');
   }
   botao.classList.add('ativo');
@@ -192,7 +191,7 @@ function abrirModal() {
   document.getElementById('modalTitulo').textContent = 'Novo Material';
   document.getElementById('modalSub').textContent = 'Cadastre um novo material no estoque';
 
-  var proximoId = todosOsMateriais.length > 0
+  const proximoId = todosOsMateriais.length > 0
     ? Math.max.apply(null, todosOsMateriais.map(function(m) { return m.id; })) + 1
     : 1;
   document.getElementById('inputCodigo').value = gerarCodigo(proximoId);
@@ -205,8 +204,8 @@ function abrirModal() {
 }
 
 function abrirEdicao(id) {
-  var mat = null;
-  for (var i = 0; i < todosOsMateriais.length; i++) {
+  let mat = null;
+  for (let i = 0; i < todosOsMateriais.length; i++) {
     if (todosOsMateriais[i].id === id) { mat = todosOsMateriais[i]; break; }
   }
   if (!mat) return;
@@ -307,8 +306,8 @@ function fecharModalDel() {
 
 function confirmarExclusao() {
   if (idExcluindo === null) return;
-  var tx = db.transaction('materiais', 'readwrite');
-  var store = tx.objectStore('materiais');
+  const tx = db.transaction('materiais', 'readwrite');
+  const store = tx.objectStore('materiais');
   
   store.delete(idExcluindo).onsuccess = function() {
     fecharModalDel();
@@ -331,21 +330,21 @@ function limparForm() {
 }
 
 function limparErros() {
-  var erros = document.querySelectorAll('.erro');
-  for (var i = 0; i < erros.length; i++) {
+  const erros = document.querySelectorAll('.erro');
+  for (let i = 0; i < erros.length; i++) {
     erros[i].textContent = '';
     erros[i].classList.remove('vis');
   }
 }
 
 function mostrarErro(id, msg) {
-  var el = document.getElementById(id);
+  const el = document.getElementById(id);
   if (el) { el.textContent = msg; el.classList.add('vis'); }
 }
 
 window.onload = function() {
   iniciarBanco();
-};
+}
 
 function telaEmDesenvolvimento(event) {
   event.preventDefault();
@@ -360,4 +359,3 @@ function fazerLogout() {
     window.location.href = 'login.html';
   }
 }
-;
