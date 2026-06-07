@@ -619,3 +619,30 @@ body {
   font-size: 12px;
   font-weight: 500;
 }
+
+
+/* responsividade aprendida em aula com media queries */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .pagina {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .area-tabela {
+    overflow-x: auto;
+  }
+
+  .filtros-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .busca-wrap {
+    width: 100%;
+  }
+}
