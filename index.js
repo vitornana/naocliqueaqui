@@ -22,9 +22,9 @@ function telaEmDesenvolvimento(event) {
   const container = document.getElementById("avisoDesenvolvimento");
   container.textContent = "Em breve, tela em desenvolvimento";
   container.style.display = "block";
-  setTimeout(function () {
+  container.onclick = function () {
     container.style.display = "none";
-  }, 4000);
+  };
 }
 
 function carregarTotalMateriais() {
