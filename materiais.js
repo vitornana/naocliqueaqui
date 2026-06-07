@@ -85,7 +85,7 @@ function carregarMateriais() {
 
 function gerarCodigo(sequencial) {
   if (!sequencial) return "MAT-NOVO";
-  return "MAT" + String(sequencial).padStart(3, "0");
+  return "MAT-" + String(sequencial).padStart(3, "0");
 }
 
 function badgeCategoria(cat) {
