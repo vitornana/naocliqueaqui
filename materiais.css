@@ -624,15 +624,17 @@ body {
 /* responsividade aprendida em aula com media queries */
 @media (max-width: 768px) {
   .sidebar {
-    display: none;
+    width: 100%;
+    height: 60px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
   }
 
-  .pagina {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 768px) {
   .area-tabela {
     overflow-x: auto;
   }
@@ -644,5 +646,36 @@ body {
 
   .busca-wrap {
     width: 100%;
+  }
+
+  .sidebar-logo-container {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    width: 100%;
+  }
+
+  .nav-link {
+    flex-direction: column;
+    font-size: 10px;
+    gap: 3px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .pagina,
+  .main-content {
+    margin-left: 0;
+    padding-bottom: 70px;
   }
 }
