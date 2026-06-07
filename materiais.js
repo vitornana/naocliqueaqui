@@ -83,10 +83,9 @@ function carregarMateriais() {
   return 'MAT' + String(id).padStart(3, '0');
 }*/
 
-function gerarCodigo(id) {
-  // Pega os 5 primeiros caracteres do ID do Firestore e deixa em maiúsculo
-  if (!id) return "MAT-NOVO";
-  return "MAT-" + String(id).substring(0, 5).toUpperCase();
+function gerarCodigo(sequencial) {
+  if (!sequencial) return "MAT-NOVO";
+  return "MAT" + String(sequencial).padStart(3, "0");
 }
 
 function badgeCategoria(cat) {
@@ -205,7 +204,7 @@ function renderizar(lista) {
 
     // O uso da crase (`) permite injetar as variáveis diretamente com ${} e evita erros de aspas
     tr.innerHTML = `
-      <td><span class="badge-un" style="font-weight:600;">${gerarCodigo(m.id)}</span></td>
+      <td><span class="badge-un" style="font-weight:600;">${gerarCodigo(m.codigoSequencial)}</span></td>
       <td>${m.nome}</td>
       <td>${badgeCategoria(m.categoria)}</td>
       <td><span class="badge-un">${m.unidade}</span></td>
@@ -241,7 +240,9 @@ function verMaterial(id) {
   }
   if (!mat) return;
 
-  document.getElementById("verCodigo").textContent = gerarCodigo(mat.id);
+  document.getElementById("verCodigo").textContent = gerarCodigo(
+    mat.codigoSequencial,
+  );
   document.getElementById("verCategoria").textContent =
     mat.categoria || "Outros";
   document.getElementById("verNome").textContent = mat.nome || "—";
@@ -330,19 +331,17 @@ function abrirModal() {
   document.getElementById("modalSub").textContent =
     "Cadastre um novo material no estoque";
 
-  const proximoId =
+  // Descobre qual é o próximo número sequencial disponível
+  const proximoSeq =
     todosOsMateriais.length > 0
-      ? Math.max.apply(
-          null,
-          todosOsMateriais.map(function (m) {
-            return m.id;
-          }),
-        ) + 1
+      ? Math.max(...todosOsMateriais.map((m) => m.codigoSequencial || 0)) + 1
       : 1;
-  document.getElementById("inputCodigo").value = gerarCodigo(proximoId);
+
+  // Mostra MAT-00X na tela e esconde o número puro no atributo 'data-seq'
+  document.getElementById("inputCodigo").value = gerarCodigo(proximoSeq);
+  document.getElementById("inputCodigo").dataset.seq = proximoSeq;
 
   limparForm();
-
   document.getElementById("overlay").classList.add("show");
   document.getElementById("modal").classList.add("show");
   document.getElementById("inputNome").focus();
@@ -364,7 +363,9 @@ function abrirEdicao(id) {
   document.getElementById("modalTitulo").textContent = "Editar Material";
   document.getElementById("modalSub").textContent =
     "Atualize as informações do material";
-  document.getElementById("inputCodigo").value = gerarCodigo(mat.id);
+  document.getElementById("inputCodigo").value = gerarCodigo(
+    mat.codigoSequencial,
+  );
   document.getElementById("inputNome").value = mat.nome || "";
   document.getElementById("inputCategoria").value = mat.categoria || "";
   document.getElementById("inputUnidade").value = mat.unidade || "";
@@ -454,20 +455,28 @@ function salvarMaterial() {
     mostrarErro("erroNome", "Informe o nome.");
     ok = false;
   }
+
   if (categoria === "") {
     mostrarErro("erroCategoria", "Selecione a categoria.");
     ok = false;
   }
+
   if (unidade === "") {
     mostrarErro("erroUnidade", "Selecione a unidade.");
     ok = false;
   }
-  if (preco === "" || isNaN(preco) || parseFloat(preco) < 0) {
-    mostrarErro("erroPreco", "Preço inválido.");
+
+  // Converte explicitamente o texto do input para número decimal
+  const precoNum = parseFloat(preco);
+  if (preco === "" || isNaN(precoNum) || precoNum < 0) {
+    mostrarErro("erroPreco", "O preço não pode ser negativo.");
     ok = false;
   }
-  if (estoque === "" || isNaN(estoque) || parseFloat(estoque) < 0) {
-    mostrarErro("erroEstoque", "Estoque inválido.");
+
+  // Faz a mesma conversão para o estoque. Agora o 0 passará sem problemas.
+  const estoqueNum = parseFloat(estoque);
+  if (estoque === "" || isNaN(estoqueNum) || estoqueNum < 0) {
+    mostrarErro("erroEstoque", "O estoque deve ser 0 ou maior.");
     ok = false;
   }
 
@@ -485,6 +494,11 @@ function salvarMaterial() {
     cotacao: parseFloat(document.getElementById("inputCotacao").value) || 0,
     dataCotacao: document.getElementById("inputDataCotacao").value,
   };
+
+  if (!modoEdicao) {
+    material.codigoSequencial =
+      parseInt(document.getElementById("inputCodigo").dataset.seq) || 1;
+  }
 
   // Botão visual de carregando (opcional, mas fica legal)
   const btnSalvar = document.querySelector(".btn-salvar");
