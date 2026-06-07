@@ -3,7 +3,7 @@ if (sessionStorage.getItem("autenticado") !== "sim") {
   window.location.href = "login.html";
 }
 
-// Configurando BD na nuvem para o Dashboard
+// Configurando BD Firebase, na nuvem, para o CRUD
 const firebaseConfig = {
   apiKey: "AIzaSyAHSZPE64HX0eLrx3sxwVa4L3W-TVYsqSI",
   authDomain: "marcel-esquadrias.firebaseapp.com",

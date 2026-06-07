@@ -3,19 +3,7 @@ if (sessionStorage.getItem("autenticado") !== "sim") {
   window.location.href = "login.html";
 }
 
-// criação banco de dados local IndexedDB (item 8)
-/*function iniciarBanco() {
-  const req = indexedDB.open('MarcelDB', 1);
-
-  req.onupgradeneeded = function(e) {
-    const banco = e.target.result;
-    if (!banco.objectStoreNames.contains('materiais')) {
-      const store = banco.createObjectStore('materiais', { keyPath: 'id', autoIncrement: true });
-      store.createIndex('nome', 'nome', { unique: false });
-    }
-  };*/
-
-// Configurando BD na nuvem.
+// Configurando BD Firebase, na nuvem, para o CRUD
 const firebaseConfig = {
   apiKey: "AIzaSyAHSZPE64HX0eLrx3sxwVa4L3W-TVYsqSI",
   authDomain: "marcel-esquadrias.firebaseapp.com",
@@ -25,7 +13,7 @@ const firebaseConfig = {
   appId: "1:756168483393:web:13d626b2a15adb043f1cc0",
 };
 
-// Inicializa o Firebase e o Banco de Dados
+// Inicializa o Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -35,35 +23,6 @@ let idEditando = null;
 let idExcluindo = null;
 let categoriaAtiva = "todos";
 let todosOsMateriais = [];
-
-/*
-
-req.onsuccess = function (e) {
-  db = e.target.result;
-  carregarMateriais();
-};
-
-req.onerror = function (e) {
-  console.error("Erro ao abrir banco:", e.target.error);
-  alert("Não foi possível abrir o banco de dados local.");
-};
-
-
-
-function carregarMateriais() {
-  const tx = db.transaction('materiais', 'readonly');
-  const store = tx.objectStore('materiais');
-  const req = store.getAll();
-
-  req.onsuccess = function() {
-    todosOsMateriais = req.result || [];
-    renderizar(todosOsMateriais);
-  };
-
-  req.onerror = function(e) {
-    console.error('Erro ao carregar:', e.target.error);
-  };
-}*/
 
 function carregarMateriais() {
   db.collection("materiais")
@@ -83,11 +42,6 @@ function carregarMateriais() {
     });
 }
 
-// começar a criar a tabela dinâmica
-/*function gerarCodigo(id) {
-  return 'MAT' + String(id).padStart(3, '0');
-}*/
-
 function gerarCodigo(sequencial) {
   if (!sequencial) return "MAT-NOVO";
   return "MAT-" + String(sequencial).padStart(3, "0");
@@ -103,81 +57,6 @@ function badgeCategoria(cat) {
   const cls = classes[cat] || "outros";
   return '<span class="badge ' + cls + '">' + cat + "</span>";
 }
-/*
-function renderizar(lista) {
-  const tbody = document.getElementById("tbody");
-  const msgVazia = document.getElementById("msgVazia");
-  tbody.innerHTML = "";
-
-  if (!lista || lista.length === 0) {
-    msgVazia.style.display = "flex";
-    return;
-  }
-
-  msgVazia.style.display = "none";
-
-  for (let i = 0; i < lista.length; i++) {
-    const m = lista[i];
-    const preco =
-      "R$ " +
-      parseFloat(m.preco || 0)
-        .toFixed(2)
-        .replace(".", ",");
-    const estoque = parseFloat(m.estoque || 0);
-    const estoqueMin = parseFloat(m.estoqueMin || 0);
-    const classeEstoque =
-      estoque > 0 && estoque > estoqueMin
-        ? "estoque-val"
-        : "estoque-val estoque-baixo";
-
-    const tr = document.createElement("tr");
-    tr.innerHTML =
-      '<td><span class="badge-un" style="font-weight:600;">' +
-      gerarCodigo(m.id) +
-      "</span></td>" +
-      "<td>" +
-      m.nome +
-      "</td>" +
-      "<td>" +
-      badgeCategoria(m.categoria) +
-      "</td>" +
-      '<td><span class="badge-un">' +
-      m.unidade +
-      "</span></td>" +
-      "<td>" +
-      preco +
-      "</td>" +
-      '<td><span class="' +
-      classeEstoque +
-      '">' +
-      estoque +
-      "</span></td>" +
-      "<td>" +
-      '<div class="acoes-td">' +
-      '<button class="btn-ver" title="Visualizar" onclick="verMaterial(' +
-      m.id +
-      ')">' +
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
-      "</button>" +
-      '<button class="btn-ed" title="Editar" onclick="abrirEdicao(' +
-      m.id +
-      ')">' +
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-      "</button>" +
-      '<button class="btn-del" title="Excluir" onclick="abrirExcluir(' +
-      m.id +
-      ", '" +
-      m.nome.replace(/'/g, "\\'") +
-      "')\">" +
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
-      "</button>" +
-      "</div>" +
-      "</td>";
-
-    tbody.appendChild(tr);
-  }
-}
-*/
 
 function renderizar(lista) {
   const tbody = document.getElementById("tbody");
@@ -372,7 +251,6 @@ function abrirEdicao(id) {
     mat.codigoSequencial,
   );
 
-  // Para campos de texto, o || "" funciona perfeitamente
   document.getElementById("inputNome").value = mat.nome || "";
   document.getElementById("inputCategoria").value = mat.categoria || "";
   document.getElementById("inputUnidade").value = mat.unidade || "";
@@ -404,54 +282,6 @@ function fecharTodosModais() {
   fecharModal();
   fecharModalVer();
 }
-// salvar registro
-/*function salvarMaterial() {
-  limparErros();
-
-  const nome = document.getElementById('inputNome').value.trim();
-  const categoria = document.getElementById('inputCategoria').value;
-  const unidade = document.getElementById('inputUnidade').value;
-  const preco = document.getElementById('inputPreco').value;
-  const estoque = document.getElementById('inputEstoque').value;
-
-  let ok = true;
-
-  if (nome === '') { mostrarErro('erroNome', 'Informe o nome.'); ok = false; }
-  if (categoria === '') { mostrarErro('erroCategoria', 'Selecione a categoria.'); ok = false; }
-  if (unidade === '') { mostrarErro('erroUnidade', 'Selecione a unidade.'); ok = false; }
-  if (preco === '' || isNaN(preco) || parseFloat(preco) < 0) { mostrarErro('erroPreco', 'Preço inválido.'); ok = false; }
-  if (estoque === '' || isNaN(estoque) || parseFloat(estoque) < 0) { mostrarErro('erroEstoque', 'Estoque inválido.'); ok = false; }
-
-  if (!ok) return;
-
-  const material = {
-    nome:        nome,
-    categoria:   categoria,
-    unidade:     unidade,
-    preco:       parseFloat(preco),
-    estoque:     parseFloat(estoque),
-    estoqueMin:  parseFloat(document.getElementById('inputEstoqueMin').value) || 0,
-    fornecedor:  document.getElementById('inputFornecedor').value,
-    cotacao:     parseFloat(document.getElementById('inputCotacao').value) || 0,
-    dataCotacao: document.getElementById('inputDataCotacao').value
-  };
-
-  const tx = db.transaction('materiais', 'readwrite');
-  const store = tx.objectStore('materiais');
-
-  if (modoEdicao && idEditando !== null) {
-    material.id = idEditando;
-    store.put(material).onsuccess = function() {
-      fecharModal();
-      carregarMateriais();
-    };
-  } else {
-    store.add(material).onsuccess = function() {
-      fecharModal();
-      carregarMateriais();
-    };
-  }
-}*/
 
 function salvarMaterial() {
   limparErros();
@@ -461,10 +291,8 @@ function salvarMaterial() {
   const unidade = document.getElementById("inputUnidade").value;
   const preco = document.getElementById("inputPreco").value;
 
-  // 1. Mudamos para 'let' para poder forçar o zero caso o usuário não digite nada
+  // Forçar o zero caso o usuário não digite nada
   let estoque = document.getElementById("inputEstoque").value;
-
-  // 2. Se estiver em branco, assume o zero automaticamente
   if (estoque === "") {
     estoque = "0";
   }
@@ -492,7 +320,6 @@ function salvarMaterial() {
     ok = false;
   }
 
-  // 3. Validação do estoque sem o bloqueio de "vazio", pois já forçamos o "0"
   const estoqueNum = parseFloat(estoque);
   if (isNaN(estoqueNum) || estoqueNum < 0) {
     mostrarErro("erroEstoque", "O estoque não pode ser negativo.");
@@ -505,8 +332,8 @@ function salvarMaterial() {
     nome: nome,
     categoria: categoria,
     unidade: unidade,
-    preco: precoNum, // 4. Usando a variável já convertida
-    estoque: estoqueNum, // 4. Usando a variável já convertida
+    preco: precoNum,
+    estoque: estoqueNum,
     estoqueMin:
       parseFloat(document.getElementById("inputEstoqueMin").value) || 0,
     fornecedor: document.getElementById("inputFornecedor").value,
@@ -555,17 +382,6 @@ function fecharModalDel() {
   document.getElementById("modalDel").classList.remove("show");
   idExcluindo = null;
 }
-/*
-function confirmarExclusao() {
-  if (idExcluindo === null) return;
-  const tx = db.transaction('materiais', 'readwrite');
-  const store = tx.objectStore('materiais');
-  
-  store.delete(idExcluindo).onsuccess = function() {
-    fecharModalDel();
-    carregarMateriais();
-  };
-}*/
 
 function confirmarExclusao() {
   if (idExcluindo === null) return;
@@ -583,7 +399,6 @@ function confirmarExclusao() {
     });
 }
 
-// funções para limpar os valores digitados
 function limparForm() {
   document.getElementById("inputNome").value = "";
   document.getElementById("inputCategoria").value = "";
@@ -612,10 +427,6 @@ function mostrarErro(id, msg) {
     el.classList.add("vis");
   }
 }
-
-/*window.onload = function() {
-  iniciarBanco();
-}*/
 
 window.onload = function () {
   carregarMateriais();
